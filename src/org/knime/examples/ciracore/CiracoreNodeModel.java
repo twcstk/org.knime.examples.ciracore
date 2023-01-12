@@ -88,7 +88,7 @@ public class CiracoreNodeModel extends NodeModel {
 		 * Here we specify how many data input and output tables the node should have.
 		 * In this case its one input and one output table.
 		 */
-		super(1, 1);
+		super(0, 0);
 	}
 
 	/**
