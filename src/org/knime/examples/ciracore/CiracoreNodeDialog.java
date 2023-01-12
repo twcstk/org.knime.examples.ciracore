@@ -58,7 +58,7 @@ public class CiracoreNodeDialog extends DefaultNodeSettingsPane {
 		 * 
 		 */
 		// First, create a new settings model using the create method from the node model.
-		SettingsModelString stringSettings = CiracoreNodeModel.createNumberFormatSettingsModel();
+		// SettingsModelString stringSettings = CiracoreNodeModel.createNumberFormatSettingsModel();
 		SettingsModelString hostSettings = CiracoreNodeModel.createHostSettingsModel();
 		SettingsModelInteger portSettings = CiracoreNodeModel.createPortSettingsModel();
 		// Add a new String component to the dialog.
@@ -67,5 +67,7 @@ public class CiracoreNodeDialog extends DefaultNodeSettingsPane {
 		addDialogComponent(new DialogComponentNumberEdit(portSettings, "Port    "));
 		
     }
+    
+    
 }
 

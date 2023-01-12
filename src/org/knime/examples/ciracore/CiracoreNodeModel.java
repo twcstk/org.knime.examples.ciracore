@@ -30,8 +30,9 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.streamable.OutputPortRole;
 
+import org.knime.core.node.streamable.OutputPortRole;
+import org.knime.core.node.port.database.*;
 import com.mongodb.client.MongoDatabase; 
 import com.mongodb.MongoClient; 
 
@@ -60,7 +61,7 @@ public class CiracoreNodeModel extends NodeModel {
 	 * and node model. In this case, the key for the number format String that
 	 * should be entered by the user in the dialog.
 	 */
-	private static final String KEY_NUMBER_FOMAT = "number_format";
+	private static final String KEY_NUMBER_FORMAT = "number_format";
 	private static final String KEY_HOST = "host";
 	private static final String KEY_PORT = "port";
 
@@ -87,7 +88,7 @@ public class CiracoreNodeModel extends NodeModel {
 	 * in the constructor of the {@link CiracoreNodeDialog} as the settings 
 	 * models are also used to create simple dialogs.
 	 */
-	private final SettingsModelString m_numberFormatSettings = createNumberFormatSettingsModel();
+	// private final SettingsModelString m_numberFormatSettings = createNumberFormatSettingsModel();
 	private final SettingsModelString m_hostSettings = createHostSettingsModel();
 	private final SettingsModelInteger m_portSettings = createPortSettingsModel();
 
@@ -109,9 +110,9 @@ public class CiracoreNodeModel extends NodeModel {
 	 * 
 	 * @return a new SettingsModelString with the key for the number format String
 	 */
-	static SettingsModelString createNumberFormatSettingsModel() {
-		return new SettingsModelString(KEY_NUMBER_FOMAT, DEFAULT_NUMBER_FORMAT);
-	}
+//	static SettingsModelString createNumberFormatSettingsModel() {
+//		return new SettingsModelString(KEY_NUMBER_FOMAT, DEFAULT_NUMBER_FORMAT);
+//	}
 	static SettingsModelString createHostSettingsModel() {
 		return new SettingsModelString(KEY_HOST, DEFAULT_HOST);
 	}
@@ -119,9 +120,12 @@ public class CiracoreNodeModel extends NodeModel {
 		return new SettingsModelInteger(KEY_PORT, DEFAULT_PORT);
 	}
 	
-	protected void createOutputPorts(int nrOutputPorts) {
-//		addOutputPort(new OutputPortRole("MongoDB Connection"),
-//					new DataTableSpec());
+	/** {@inheritDoc} */
+	@Override
+	public OutputPortRole[] getOutputPortRoles()
+	{
+		
+		return new OutputPortRole[] { OutputPortRole.NONDISTRIBUTED };
 	}
 	/**
 	 * 
@@ -170,43 +174,43 @@ public class CiracoreNodeModel extends NodeModel {
 		 * Get the row iterator over the input table which returns each row one-by-one
 		 * from the input table.
 		 */
-		CloseableRowIterator rowIterator = inputTable.iterator();
+		// CloseableRowIterator rowIterator = inputTable.iterator();
 
 		/*
 		 * A counter for how many rows have already been processed. This is used to
 		 * calculate the progress of the node, which is displayed as a loading bar under
 		 * the node icon.
 		 */
-		int currentRowCounter = 0;
-		// Iterate over the rows of the input table.
-		while (rowIterator.hasNext()) {
-			DataRow currentRow = rowIterator.next();
-			int numberOfCells = currentRow.getNumCells();
+//		int currentRowCounter = 0;
+//		// Iterate over the rows of the input table.
+//		while (rowIterator.hasNext()) {
+//			DataRow currentRow = rowIterator.next();
+//			int numberOfCells = currentRow.getNumCells();
 			/*
 			 * A list to collect the cells to output for the current row. The type and
 			 * amount of cells must match the DataTableSpec we used when creating the
 			 * DataContainer. 
 			 */
-			List<DataCell> cells = new ArrayList<>();
-			// Iterate over the cells of the current row.
-			for (int i = 0; i < numberOfCells; i++) {
-				DataCell cell = currentRow.getCell(i);
+//			List<DataCell> cells = new ArrayList<>();
+//			// Iterate over the cells of the current row.
+//			for (int i = 0; i < numberOfCells; i++) {
+//				DataCell cell = currentRow.getCell(i);
 				/*
 				 * We only care about double cells. Hence, we check if the current cell equals
 				 * DoubleCell.class. All other cells in the input table will be ignored.
 				 */
-				if (cell.getType().getCellClass().equals((DoubleCell.class))) {
+//				if (cell.getType().getCellClass().equals((DoubleCell.class))) {
 					// Cast the cell as we know is must be a DoubleCell.
-					DoubleCell doubleCell = (DoubleCell) cell;
+//					DoubleCell doubleCell = (DoubleCell) cell;
 					/*
 					 * Format the double value using the user defined number format. The format is
 					 * retrieved from the settings model member that we created above.
 					 */
-					String format = m_numberFormatSettings.getStringValue();
-					String formatedValue = String.format(format, doubleCell.getDoubleValue());
-					// Create a new StringCell and add it to our cell list.
-					cells.add(new StringCell(formatedValue));
-				}
+//					String format = m_numberFormatSettings.getStringValue();
+//					String formatedValue = String.format(format, doubleCell.getDoubleValue());
+//					// Create a new StringCell and add it to our cell list.
+//					cells.add(new StringCell(formatedValue));
+//				}
 				/*
 				 * In this example we do not check for missing cells. If there are missing cells
 				 * in a row, the node will throw an Exception because we try to create a row
@@ -218,13 +222,13 @@ public class CiracoreNodeModel extends NodeModel {
 				 * if' clause checking 'cell.isMissing()'. Then, add a new MissingCell to the
 				 * list of cells.
 				 */
-			}
+//			}
 			// Add the new row to the output data container
-			DataRow row = new DefaultRow(currentRow.getKey(), cells);
-			container.addRowToTable(row);
+//			DataRow row = new DefaultRow(currentRow.getKey(), cells);
+//			container.addRowToTable(row);
 
 			// We finished processing one row, hence increase the counter
-			currentRowCounter++;
+//			currentRowCounter++;
 
 			/*
 			 * Here we check if a user triggered a cancel of the node. If so, this call will
@@ -232,7 +236,7 @@ public class CiracoreNodeModel extends NodeModel {
 			 * frequently during execution, e.g. after the processing of one row if
 			 * possible.
 			 */
-			exec.checkCanceled();
+//			exec.checkCanceled();
 
 			/*
 			 * Calculate the percentage of execution progress and inform the
@@ -241,17 +245,18 @@ public class CiracoreNodeModel extends NodeModel {
 			 * over the progress bar of the node). This is especially useful to inform the
 			 * user about the execution status for long running nodes.
 			 */
-			exec.setProgress(currentRowCounter / (double) inputTable.size(), "Formatting row " + currentRowCounter);
-		}
+//			exec.setProgress(currentRowCounter / (double) inputTable.size(), "Formatting row " + currentRowCounter);
+//		}
 
 		/*
 		 * Once we are done, we close the container and return its table. Here we need
 		 * to return as many tables as we specified in the constructor. This node has
 		 * one output, hence return one table (wrapped in an array of tables).
 		 */
-		container.close();
-		BufferedDataTable out = container.getTable();
-		return new BufferedDataTable[] { out };
+//		container.close();
+//		BufferedDataTable out = container.getTable();
+//		return new BufferedDataTable[] { out };
+		return new BufferedDataTable[] { };
 	}
 
 	/**
@@ -294,8 +299,9 @@ public class CiracoreNodeModel extends NodeModel {
 		 */
 		// Creating a Mongo client 
 	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
-		DataTableSpec inputTableSpec = inSpecs[0];
-		return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
+		// DataTableSpec inputTableSpec = inSpecs[0];
+		// return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
+		return new DataTableSpec[] { null };
 	}
 
 	/**
@@ -340,7 +346,8 @@ public class CiracoreNodeModel extends NodeModel {
 		 * all common data types. Hence, you can easily write your settings manually.
 		 * See the methods of the NodeSettingsWO.
 		 */
-		m_numberFormatSettings.saveSettingsTo(settings);
+		m_hostSettings.saveSettingsTo(settings);
+		m_portSettings.saveSettingsTo(settings);
 	}
 
 	/**
@@ -355,7 +362,8 @@ public class CiracoreNodeModel extends NodeModel {
 		 * The SettingsModel will handle the loading. After this call, the current value
 		 * (from the view) can be retrieved from the settings model.
 		 */
-		m_numberFormatSettings.loadSettingsFrom(settings);
+		m_hostSettings.loadSettingsFrom(settings);
+		m_portSettings.loadSettingsFrom(settings);
 	}
 
 	/**
@@ -369,7 +377,8 @@ public class CiracoreNodeModel extends NodeModel {
 		 * already handled in the dialog. Do not actually set any values of any member
 		 * variables.
 		 */
-		m_numberFormatSettings.validateSettings(settings);
+		m_hostSettings.validateSettings(settings);
+		m_portSettings.validateSettings(settings);
 	}
 
 	@Override
