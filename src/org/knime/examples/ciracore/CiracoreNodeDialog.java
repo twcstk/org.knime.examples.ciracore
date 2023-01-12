@@ -1,7 +1,10 @@
 package org.knime.examples.ciracore;
 
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
+import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
+import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
+import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
@@ -56,8 +59,13 @@ public class CiracoreNodeDialog extends DefaultNodeSettingsPane {
 		 */
 		// First, create a new settings model using the create method from the node model.
 		SettingsModelString stringSettings = CiracoreNodeModel.createNumberFormatSettingsModel();
+		SettingsModelString hostSettings = CiracoreNodeModel.createHostSettingsModel();
+		SettingsModelInteger portSettings = CiracoreNodeModel.createPortSettingsModel();
 		// Add a new String component to the dialog.
-		addDialogComponent(new DialogComponentString(stringSettings, "Number Format", true, 10));
+		// addDialogComponent(new DialogComponentString(stringSettings, "Number Format", true, 10));
+		addDialogComponent(new DialogComponentString(hostSettings, "Host    ", true, 40));
+		addDialogComponent(new DialogComponentNumberEdit(portSettings, "Port    "));
+		
     }
 }
 

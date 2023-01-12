@@ -30,6 +30,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.streamable.OutputPortRole;
 
 import com.mongodb.client.MongoDatabase; 
 import com.mongodb.MongoClient; 
@@ -117,8 +118,10 @@ public class CiracoreNodeModel extends NodeModel {
 	static SettingsModelInteger createPortSettingsModel() {
 		return new SettingsModelInteger(KEY_PORT, DEFAULT_PORT);
 	}
+	
 	protected void createOutputPorts(int nrOutputPorts) {
-		
+//		addOutputPort(new OutputPortRole("MongoDB Connection"),
+//					new DataTableSpec());
 	}
 	/**
 	 * 
