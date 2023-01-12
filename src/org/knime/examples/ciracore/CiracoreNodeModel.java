@@ -28,7 +28,11 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+
+import com.mongodb.client.MongoDatabase; 
+import com.mongodb.MongoClient; 
 
 
 /**
@@ -56,6 +60,8 @@ public class CiracoreNodeModel extends NodeModel {
 	 * should be entered by the user in the dialog.
 	 */
 	private static final String KEY_NUMBER_FOMAT = "number_format";
+	private static final String KEY_HOST = "host";
+	private static final String KEY_PORT = "port";
 
 	/**
 	 * The default number format String. This default will round to three decimal
@@ -63,6 +69,8 @@ public class CiracoreNodeModel extends NodeModel {
 	 * https://docs.oracle.com/javase/tutorial/java/data/numberformat.html
 	 */
 	private static final String DEFAULT_NUMBER_FORMAT = "%.3f";
+	private static final String DEFAULT_HOST = "localhost";
+	private static final int DEFAULT_PORT = 27017;
 
 	/**
 	 * The settings model to manage the shared settings. This model will hold the
@@ -73,12 +81,14 @@ public class CiracoreNodeModel extends NodeModel {
 	 * {@link #loadValidatedSettingsFrom(NodeSettingsRO)},
 	 * {@link #saveSettingsTo(NodeSettingsWO)}). 
 	 * <br>
-	 * Here, we use a SettingsModelString as the number format is a String. 
+	 * Here, we use a SettingsModelString as the host is a String and port is an Integer. 
 	 * There are models for all common data types. Also have a look at the comments 
 	 * in the constructor of the {@link CiracoreNodeDialog} as the settings 
 	 * models are also used to create simple dialogs.
 	 */
 	private final SettingsModelString m_numberFormatSettings = createNumberFormatSettingsModel();
+	private final SettingsModelString m_hostSettings = createHostSettingsModel();
+	private final SettingsModelInteger m_portSettings = createPortSettingsModel();
 
 	/**
 	 * Constructor for the node model.
@@ -92,8 +102,8 @@ public class CiracoreNodeModel extends NodeModel {
 	}
 
 	/**
-	 * A convenience method to create a new settings model used for the number
-	 * format String. This method will also be used in the {@link CiracoreNodeDialog}. 
+	 * A convenience method to create a new settings model used for the host and the port
+	 * This method will also be used in the {@link CiracoreNodeDialog}. 
 	 * The settings model will sync via the above defined key.
 	 * 
 	 * @return a new SettingsModelString with the key for the number format String
@@ -101,7 +111,15 @@ public class CiracoreNodeModel extends NodeModel {
 	static SettingsModelString createNumberFormatSettingsModel() {
 		return new SettingsModelString(KEY_NUMBER_FOMAT, DEFAULT_NUMBER_FORMAT);
 	}
-
+	static SettingsModelString createHostSettingsModel() {
+		return new SettingsModelString(KEY_HOST, DEFAULT_HOST);
+	}
+	static SettingsModelInteger createPortSettingsModel() {
+		return new SettingsModelInteger(KEY_PORT, DEFAULT_PORT);
+	}
+	protected void createOutputPorts(int nrOutputPorts) {
+		
+	}
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -255,13 +273,13 @@ public class CiracoreNodeModel extends NodeModel {
 		 * console and printed to the KNIME log. The log will also contain the stack
 		 * trace.
 		 */
-		String format = m_numberFormatSettings.getStringValue();
-		try {
-			String.format(format, 0.0123456789);
-		} catch (IllegalFormatException e) {
-			throw new InvalidSettingsException(
-					"The entered format is not a valid pattern String! Reason: " + e.getMessage(), e);
-		}
+//		String format = m_numberFormatSettings.getStringValue();
+//		try {
+//			String.format(format, 0.0123456789);
+//		} catch (IllegalFormatException e) {
+//			throw new InvalidSettingsException(
+//					"The entered format is not a valid pattern String! Reason: " + e.getMessage(), e);
+//		}
 
 		/*
 		 * Similar to the return type of the execute method, we need to return an array
@@ -271,6 +289,8 @@ public class CiracoreNodeModel extends NodeModel {
 		 * calculate the output table spec again in the execute method in order to
 		 * create a new data container, we create a new method to do that.
 		 */
+		// Creating a Mongo client 
+	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
 		DataTableSpec inputTableSpec = inSpecs[0];
 		return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
 	}
