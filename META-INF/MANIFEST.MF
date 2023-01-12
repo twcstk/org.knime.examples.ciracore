@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ciracore-Node extension for KNIME Workbench
+Bundle-SymbolicName: org.knime.examples.ciracore; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: ciracore.jar
+Bundle-Activator: org.knime.examples.ciracore.CiracoreNodePlugin
+Bundle-Vendor: dv
+Require-Bundle: org.eclipse.core.runtime,
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
+ org.knime.base
+Bundle-ActivationPolicy: lazy
+Export-Package: org.knime.examples.ciracore
+
