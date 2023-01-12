@@ -151,7 +151,8 @@ public class CiracoreNodeModel extends NodeModel {
 		 * input tables as specified in the constructor. In this case it can only be one
 		 * (see constructor).
 		 */
-		BufferedDataTable inputTable = inData[0];
+//		BufferedDataTable inputTable = inData[0];
+		BufferedDataTable inputTable = null;
 
 		/*
 		 * Create the spec of the output table, for each double column of the input
