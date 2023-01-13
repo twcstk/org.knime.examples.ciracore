@@ -30,11 +30,13 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-
+import org.knime.core.node.defaultnodesettings.SettingsModel;
+import org.knime.core.node.port.*;
+import org.knime.core.node.port.PortType;
 import org.knime.core.node.streamable.OutputPortRole;
 import org.knime.core.node.port.database.*;
 import com.mongodb.client.MongoDatabase; 
-import com.mongodb.MongoClient; 
+import com.mongodb.client.*; 
 
 
 /**
@@ -73,6 +75,7 @@ public class CiracoreNodeModel extends NodeModel {
 	private static final String DEFAULT_NUMBER_FORMAT = "%.3f";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final int DEFAULT_PORT = 27017;
+	private MongoClient m_client;
 
 	/**
 	 * The settings model to manage the shared settings. This model will hold the
@@ -100,7 +103,7 @@ public class CiracoreNodeModel extends NodeModel {
 		 * Here we specify how many data input and output tables the node should have.
 		 * In this case its one input and one output table.
 		 */
-		super(0, 0);
+		super(new PortType[] { } , new PortType[] {ConnectionPortObject.TYPE });
 	}
 
 	/**
@@ -120,19 +123,20 @@ public class CiracoreNodeModel extends NodeModel {
 		return new SettingsModelInteger(KEY_PORT, DEFAULT_PORT);
 	}
 	
-	/** {@inheritDoc} */
-	@Override
-	public OutputPortRole[] getOutputPortRoles()
-	{
-		
-		return new OutputPortRole[] { OutputPortRole.NONDISTRIBUTED };
-	}
+//	/** {@inheritDoc} */
+//	@Override
+//	public OutputPortRole[] getOutputPortRoles()
+//	{
+//		String uniqueID = "The_MngoDB_Connection";
+//		SettingsModel outputPort = SettingsModel.createPortType(uniqueID, ConnectionPortObject); 
+//		return new OutputPortRole[] { OutputPortRole.NONDISTRIBUTED };
+//	}
 	/**
 	 * 
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected BufferedDataTable[] execute(final BufferedDataTable[] inData, final ExecutionContext exec)
+	protected PortObject[] execute(final PortObject[] inPort, final ExecutionContext exec)
 			throws Exception {
 		/*
 		 * The functionality of the node is implemented in the execute method. This
@@ -151,15 +155,15 @@ public class CiracoreNodeModel extends NodeModel {
 		 * input tables as specified in the constructor. In this case it can only be one
 		 * (see constructor).
 		 */
-//		BufferedDataTable inputTable = inData[0];
-		BufferedDataTable inputTable = null;
+//		aBufferedDataTable inputTable = inData[0];
+//		BufferedDataTable inputPort = null;
 
 		/*
 		 * Create the spec of the output table, for each double column of the input
 		 * table we will create one formatted String column in the output. See the
 		 * javadoc of the "createOutputSpec(...)" for more information.
 		 */
-		DataTableSpec outputSpec = createOutputSpec(inputTable.getDataTableSpec());
+		// DataTableSpec outputSpec = createOutputSpec(inputTable.getDataTableSpec());
 
 		/*
 		 * The execution context provides storage capacity, in this case a
@@ -169,7 +173,7 @@ public class CiracoreNodeModel extends NodeModel {
 		 * framework. Have a look at the methods of the "exec". There is a lot of
 		 * functionality to create and change data tables.
 		 */
-		BufferedDataContainer container = exec.createDataContainer(outputSpec);
+		// BufferedDataContainer container = exec.createDataContainer(outputSpec);
 
 		/*
 		 * Get the row iterator over the input table which returns each row one-by-one
@@ -257,7 +261,10 @@ public class CiracoreNodeModel extends NodeModel {
 //		container.close();
 //		BufferedDataTable out = container.getTable();
 //		return new BufferedDataTable[] { out };
-		return new BufferedDataTable[] { };
+		String uri = "mongodb://" + m_hostSettings.getStringValue()+":" + m_portSettings.getIntValue();
+		m_client = MongoClients.create(uri);
+	    ConnectionPortObject output = new ConnectionPortObject(m_client, DEFAULT_HOST, DEFAULT_PORT, "daviddb");
+	    return new PortObject[]{output};
 	}
 
 	/**
@@ -299,7 +306,7 @@ public class CiracoreNodeModel extends NodeModel {
 		 * create a new data container, we create a new method to do that.
 		 */
 		// Creating a Mongo client 
-	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
+//	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
 		// DataTableSpec inputTableSpec = inSpecs[0];
 		// return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
 		return new DataTableSpec[] { null };
