@@ -26,6 +26,7 @@ public class ConnectionPortObject implements PortObject {
     private final String m_host;
     private final int m_port;
     private final String m_database;
+    private final MongoDBConnectionPortObjectSpec m_spec = new MongoDBConnectionPortObjectSpec();
     
     public void save(final PortObjectZipOutputStream out) throws IOException {
         // Serialize the connection object
@@ -38,7 +39,7 @@ public class ConnectionPortObject implements PortObject {
 	@Override
 	public PortObjectSpec getSpec() {
 		// TODO Auto-generated method stub
-		return null;
+		return m_spec;
 	}
 
 	@Override
