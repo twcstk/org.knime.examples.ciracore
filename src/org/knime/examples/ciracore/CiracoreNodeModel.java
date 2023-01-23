@@ -31,8 +31,10 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.defaultnodesettings.SettingsModel;
-import org.knime.core.node.port.*;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.database.*;
 import org.knime.core.node.streamable.OutputPortRole;
 import org.knime.core.node.port.database.*;
 import com.mongodb.client.MongoDatabase; 
@@ -160,46 +162,24 @@ public class CiracoreNodeModel extends NodeModel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
-		/*
-		 * Check if the node is executable, e.g. all required user settings are
-		 * available and valid, or the incoming types are feasible for the node to
-		 * execute. In case the node can execute in its current configuration with the
-		 * current input, calculate and return the table spec that would result of the
-		 * execution of this node. I.e. this method precalculates the table spec of the
-		 * output table.
-		 * 
-		 * Here we perform a sanity check on the entered number format String. In this
-		 * case we just try to apply it to some dummy double number. If there is a
-		 * problem, an IllegalFormatException will be thrown. We catch the exception and
-		 * wrap it in a InvalidSettingsException with an informative message for the
-		 * user. The message should make clear what the problem is and how it can be
-		 * fixed if this information is available. This will be displayed in the KNIME
-		 * console and printed to the KNIME log. The log will also contain the stack
-		 * trace.
-		 */
-//		String format = m_numberFormatSettings.getStringValue();
-//		try {
-//			String.format(format, 0.0123456789);
-//		} catch (IllegalFormatException e) {
-//			throw new InvalidSettingsException(
-//					"The entered format is not a valid pattern String! Reason: " + e.getMessage(), e);
-//		}
+	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
-		/*
-		 * Similar to the return type of the execute method, we need to return an array
-		 * of DataTableSpecs with the length of the number of outputs ports of the node
-		 * (as specified in the constructor). The resulting table created in the execute
-		 * methods must match the spec created in this method. As we will need to
-		 * calculate the output table spec again in the execute method in order to
-		 * create a new data container, we create a new method to do that.
-		 */
-		// Creating a Mongo client 
-//	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
-		// DataTableSpec inputTableSpec = inSpecs[0];
-		// return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
-		return new DataTableSpec[] { null };
+
+		
+		return new PortObjectSpec[] { createSpec() };
 	}
+	
+	private PortObjectSpec createSpec() {
+	        String jdbcUrl = createJdbcUrl(m_settings);
+	     // Creating a Mongo client 
+		    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
+
+
+	        DatabaseConnectionSettings s = new DatabaseConnectionSettings(m_settings);
+	        s.setJDBCUrl(jdbcUrl);
+	       PortObjectSpec spec = new DatabaseConnectionPortObjectSpec(s);
+	        return spec;
+	    }
 
 	/**
 	 * Creates the output table spec from the input spec. For each double column in

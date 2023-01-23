@@ -16,4 +16,5 @@ public class MongoDBConnectionPortObjectSpec implements PortObjectSpec {
     public JComponent[] getViews() {
         return new JComponent[0];
     }
+    
 }
