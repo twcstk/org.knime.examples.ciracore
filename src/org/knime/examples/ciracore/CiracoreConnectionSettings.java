@@ -183,8 +183,8 @@ public class CiracoreConnectionSettings {
 	    }
 
 	    private String buildConnectionString(final CredentialsProvider credentials) {
-
-	        final StringBuilder sb = new StringBuilder("mongo");
+	    	
+	    	final StringBuilder sb = new StringBuilder(getConnectionType().getUrlPrefix());
 	        sb.append("://");
 	        if (m_auth.getAuthenticationType() == AuthenticationType.USER_PWD
 	            || m_auth.getAuthenticationType() == AuthenticationType.CREDENTIALS) {

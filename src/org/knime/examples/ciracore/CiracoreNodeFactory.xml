@@ -3,35 +3,44 @@
     <name>Ciracore Connector</name>
     
     <shortDescription>
-        
+     Connects to MongoDB in order to access it by the downstream nodes.   
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
-        
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
-        <!-- possibly more options that can also be grouped by tabs -->
-        <!--
-        <tab name="Standard Options">
-            <option name="short name of first option (like in the dialog)">description of first option</option>
-            <option name="short name of second option (like in the dialog)">description of second option</option>
+<intro>
+            Connects to MongoDB in order to access it by the downstream nodes.
+        </intro>
+        <tab name="Settings">
+        	<option name="Connection type">
+        		Use standard for a <a href="https://docs.mongodb.com/manual/reference/connection-string/#std-label-connections-standard-connection-string-format">standard</a> 
+        		and SRV for a <a href="https://docs.mongodb.com/manual/reference/connection-string/#std-label-connections-dns-seedlist">DNS Seed List</a> connection.</option>
+	        <option name="Instances">
+	        	List of servers to connect to. The default port for standard connections is 27017.
+	        	For DNS seed list (SRV) connections the port must be empty.
+        	</option>
+	        <option name="Authentication">
+	        	When you select Credential or Username and password you also have to specify the authentication database.
+	        	Select the None option to use no authentication at all or an alternative authentication.
+	        	To use an alternative authentication you have to specifying the required parameters via the Advanced tab.
+	        	For more details see the <a href="https://docs.mongodb.com/manual/core/authentication/">MongoDB manual</a>.
+        	</option>
+	        <option name="Authentication Database">
+	        	The <a href="https://docs.mongodb.com/manual/core/security-users/#authentication-database">authentication database</a> 
+	        	for the login user. This option is only enabled for the Credential or Username and password authentication type. 
+	        	</option>
         </tab>
-        <tab name="Advanced Options">
-            <option name="short name of first advanced option (like in the dialog)">description of first advanced option</option>
+        <tab name="Advanced">
+        	<option name="Connection string options ">
+        		The table provides a list of standard options and their default value if available.
+	        	For further details about the available connection string options please have a look at the 
+	        	<a href="https://docs.mongodb.com/manual/reference/connection-string/#connection-string-options">Mongo DB documentation</a>.
+        	</option>
         </tab>
-        -->
+
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
-        <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
-        <!-- possibly more output ports here-->
-    </ports>    
-    <views>
-        <view index="0" name="name of first view">Description of first view...</view>
-        <!--view index="1" name="name of second view">Description of second view...</view-->
-    </views>
+        <outPort index="0" name="MongoDB Connection">The MongoDB Connection</outPort>
+    </ports>
+ 
 </knimeNode>

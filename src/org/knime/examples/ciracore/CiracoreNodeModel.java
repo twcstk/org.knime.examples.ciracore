@@ -13,12 +13,8 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-//import org.knime.mongodb2.connection.MongoDBConnectionRegistry;
-//import org.knime.mongodb2.connection.port.MongoDBConnectionPortObject;
-//import org.knime.mongodb2.connection.port.MongoDBConnectionPortObjectSpec;
 
 import com.mongodb.client.MongoClient;
-
 import com.mongodb.client.MongoDatabase; 
 
 
