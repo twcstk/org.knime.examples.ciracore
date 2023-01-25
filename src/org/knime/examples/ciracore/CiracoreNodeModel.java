@@ -31,10 +31,14 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
-import org.knime.core.node.streamable.OutputPortRole;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.database.*;
+import org.knime.database.port;
 import com.mongodb.client.MongoDatabase; 
 import com.mongodb.MongoClient; 
+
 
 
 /**
@@ -132,34 +136,30 @@ public class CiracoreNodeModel extends NodeModel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected BufferedDataTable[] execute(final BufferedDataTable[] inData, final ExecutionContext exec)
+	protected PortObject[] execute(final PortObject[] inObjects, final ExecutionContext exec)
 			throws Exception {
-		/*
-		 * The functionality of the node is implemented in the execute method. This
-		 * implementation will format each double column of the input table using a user
-		 * provided format String. The output will be one String column for each double
-		 * column of the input containing the formatted number from the input table. For
-		 * simplicity, all other columns are ignored in this example.
-		 * 
-		 * Some example log output. This will be printed to the KNIME console and KNIME
-		 * log.
-		 */
-		LOGGER.info("This is an example info.");
+
 
 		/*
 		 * The input data table to work with. The "inData" array will contain as many
 		 * input tables as specified in the constructor. In this case it can only be one
 		 * (see constructor).
 		 */
-//		BufferedDataTable inputTable = inData[0];
-		BufferedDataTable inputTable = null;
+	    // Create a new ModelContentWO
+	    CiracoreModelContent model = new CiracoreModelContent();
+	    // Set the properties of the model
+	    // model.setInputFeatures(inputFeatures);
+	    // model.setOutputLabels(outputLabels);
+	    // Create the output PortObject
+	    final ModelPortObject outObj = new ModelPortObject;
 
 		/*
 		 * Create the spec of the output table, for each double column of the input
 		 * table we will create one formatted String column in the output. See the
 		 * javadoc of the "createOutputSpec(...)" for more information.
 		 */
-		DataTableSpec outputSpec = createOutputSpec(inputTable.getDataTableSpec());
+	    		  // Create the output PortObject
+	    	    final ModelPortObject outObj = new ModelPortObject;
 
 		/*
 		 * The execution context provides storage capacity, in this case a
@@ -264,7 +264,7 @@ public class CiracoreNodeModel extends NodeModel {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
+	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 		/*
 		 * Check if the node is executable, e.g. all required user settings are
 		 * available and valid, or the incoming types are feasible for the node to
@@ -300,9 +300,9 @@ public class CiracoreNodeModel extends NodeModel {
 		 */
 		// Creating a Mongo client 
 	    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
-		// DataTableSpec inputTableSpec = inSpecs[0];
+	    final PortObjectSpec  outSpec = createOutputSpec(mongo);
 		// return new DataTableSpec[] { createOutputSpec(inputTableSpec) };
-		return new DataTableSpec[] { null };
+		return new PortObjectSpec[] { outSpec };
 	}
 
 	/**
