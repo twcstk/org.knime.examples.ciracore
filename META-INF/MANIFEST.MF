@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ciracore-Node extension for KNIME Workbench
 Bundle-SymbolicName: org.knime.examples.ciracore; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.2.qualifier
 Bundle-ClassPath: ciracore.jar,
  lib/mongo-java-driver-3.12.11.jar
 Bundle-Activator: org.knime.examples.ciracore.CiracoreNodePlugin
@@ -10,7 +10,11 @@ Bundle-Vendor: dv
 Require-Bundle: org.eclipse.core.runtime,
  org.knime.workbench.core,
  org.knime.workbench.repository,
- org.knime.base
+ org.knime.base,
+ org.apache.commons.lang3;bundle-version="3.9.0",
+ org.knime.mongodb2;bundle-version="5.0.0",
+ org.knime.mongodb;bundle-version="5.0.0",
+ javax.activation;bundle-version="1.2.2"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.knime.examples.ciracore
 

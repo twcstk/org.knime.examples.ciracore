@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 // import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -16,9 +17,13 @@ import org.knime.core.node.defaultnodesettings.SettingsModelAuthentication;
 import org.knime.core.node.defaultnodesettings.SettingsModelAuthentication.AuthenticationType;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.workflow.CredentialsProvider;
+import org.knime.examples.ciracore.ui.ConnectionType;
+import org.knime.examples.ciracore.ui.MongoDBOption;
 //import org.knime.mongodb2.connection.node.ui.MongoDBOption;
 //import org.knime.mongodb2.connection.node.ui.SettingsModelHosts;
 //import org.knime.mongodb2.connection.node.ui.SettingsModelKeyValue;
+import org.knime.examples.ciracore.ui.SettingsModelHosts;
+import org.knime.examples.ciracore.ui.SettingsModelKeyValue;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
@@ -43,28 +48,28 @@ public class CiracoreConnectionSettings {
 
 	    private static final String OPTIONS_CFG_KEY = "options";
 
-	    private final SettingsModelString m_hosts;
+	    private final SettingsModelHosts m_hosts;
 	    private final SettingsModelAuthentication m_auth;
 	    private final SettingsModelString m_authdb;
 	    private final SettingsModelString m_connectionType;
 
-	    // private final SettingsModelKeyValue m_options;
+	    private final SettingsModelKeyValue m_options;
 
 	    /**
 	     * Creates new instance
 	     */
 	    public CiracoreConnectionSettings() {
-	        m_hosts = new SettingsModelString(HOSTS_CFG_KEY, "localhost:27017");
+	        m_hosts = new SettingsModelHosts(HOSTS_CFG_KEY);
 	        m_auth = new SettingsModelAuthentication(AUTH_CFG_KEY, AuthenticationType.USER_PWD);
 	        m_authdb = new SettingsModelString(AUTHDB_CFG_KEY, "admin");
 	        m_connectionType = new SettingsModelString(CONNECTION_TYPE_CFG_KEY, "STANDARD");
-	        // m_options = new SettingsModelKeyValue(OPTIONS_CFG_KEY, MongoDBOption.ALL_OPTIONS);
+	        m_options = new SettingsModelKeyValue(OPTIONS_CFG_KEY, MongoDBOption.ALL_OPTIONS);
 	    }
 
 	    /**
 	     * @return the hosts model
 	     */
-	    public SettingsModelString getHostsModel() {
+	    public SettingsModelHosts getHostsModel() {
 	        return m_hosts;
 	    }
 
@@ -99,16 +104,16 @@ public class CiracoreConnectionSettings {
 	    /**
 	     * @return the connectionType
 	     */
-//	    public ConnectionType getConnectionType() {
-//	        return ConnectionType.get(m_connectionType.getStringValue());
-//	    }
+	    public ConnectionType getConnectionType() {
+	        return ConnectionType.get(m_connectionType.getStringValue());
+	    }
 
 	    /**
 	     * @return the options model
 	     */
-//	    public SettingsModelKeyValue getOptionsModel() {
-//	        return m_options;
-//	    }
+	    public SettingsModelKeyValue getOptionsModel() {
+	        return m_options;
+	    }
 
 	    /**
 	     * Saves the settings to the given {@link NodeSettingsWO}.
@@ -120,7 +125,7 @@ public class CiracoreConnectionSettings {
 	        m_auth.saveSettingsTo(settings);
 	        m_authdb.saveSettingsTo(settings);
 	        m_connectionType.saveSettingsTo(settings);
-//	        m_options.saveSettingsTo(settings);
+	        m_options.saveSettingsTo(settings);
 	    }
 
 	    /**
@@ -134,7 +139,7 @@ public class CiracoreConnectionSettings {
 	        m_auth.loadSettingsFrom(settings);
 	        m_authdb.loadSettingsFrom(settings);
 	        m_connectionType.loadSettingsFrom(settings);
-//	        m_options.loadSettingsFrom(settings);
+	        m_options.loadSettingsFrom(settings);
 	    }
 
 	    /**
@@ -155,7 +160,7 @@ public class CiracoreConnectionSettings {
 	     * @throws InvalidSettingsException
 	     */
 	    public void validate() throws InvalidSettingsException {
-	        // m_hosts.validate();
+	         m_hosts.validate();
 	    }
 
 	    /**
@@ -188,18 +193,18 @@ public class CiracoreConnectionSettings {
 	            sb.append(userName).append(":").append(password).append("@");
 	        }
 
-	        sb.append(m_hosts.getStringValue());
+	        sb.append(m_hosts.getHostsString());
 	        sb.append("/");
-//	        if (m_authdb.isEnabled() && StringUtils.isNotBlank(m_authdb.getStringValue())) {
-//	            sb.append(urlEncode(m_authdb.getStringValue()));
-//	        }
-//
-//	        final List<String> options = m_options.getAssignedKeys();
-//	        if (options.size() > 0) {
-//	            sb.append("?");
-//	            sb.append(options.stream().map(key -> key + "=" + urlEncode(m_options.getValue(key)))
-//	                .collect(Collectors.joining("&")));
-//	        }
+	        if (m_authdb.isEnabled() && StringUtils.isNotBlank(m_authdb.getStringValue())) {
+	            sb.append(urlEncode(m_authdb.getStringValue()));
+	        }
+
+	        final List<String> options = m_options.getAssignedKeys();
+	        if (options.size() > 0) {
+	            sb.append("?");
+	            sb.append(options.stream().map(key -> key + "=" + urlEncode(m_options.getValue(key)))
+	                .collect(Collectors.joining("&")));
+	        }
 
 	        return sb.toString();
 	    }

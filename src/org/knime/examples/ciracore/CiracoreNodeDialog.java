@@ -25,7 +25,10 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelAuthentication;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.workflow.ConnectionContainer.ConnectionType;
+import org.knime.examples.ciracore.ui.ConnectionType;
+import org.knime.examples.ciracore.ui.DialogComponentKeyValueEdit;
+import org.knime.examples.ciracore.ui.HostsTablePanel;
+import org.knime.examples.ciracore.ui.SettingsModelHosts;
 
 /**
  * This is an example implementation of the node dialog of the
@@ -47,19 +50,19 @@ public class CiracoreNodeDialog extends NodeDialogPane {
 
     private final SettingsModelString m_authDbModel = m_settings.getAuthdbModel();
 
-    private final SettingsModelString m_hosts = m_settings.getHostsModel();
-
+    private final HostsTablePanel m_hosts = new HostsTablePanel(m_settings.getHostsModel());
+    
     private DialogComponentAuthentication m_auth =
             new DialogComponentAuthentication(m_authModel, null, NONE, USER_PWD, CREDENTIALS);
 
-//    private final DialogComponentKeyValueEdit m_options = new DialogComponentKeyValueEdit(m_settings.getOptionsModel());
+    private final DialogComponentKeyValueEdit m_options = new DialogComponentKeyValueEdit(m_settings.getOptionsModel());
 
     /**
      * Creates new instance
      */
     public CiracoreNodeDialog() {
         addTab("Settings", createSettingsPanel());
-        // addTab("Advanced", createAdvancedPanel());
+        addTab("Advanced", createAdvancedPanel());
     }
 
     private JComponent createSettingsPanel() {
@@ -88,8 +91,8 @@ public class CiracoreNodeDialog extends NodeDialogPane {
     }
 
     private JPanel createHostPanel() {
-//        final DialogComponentButtonGroup connectionType = new DialogComponentButtonGroup(
-//            m_settings.getConnectionTypeModel(), null, false, ConnectionType.values());
+    	final DialogComponentButtonGroup connectionType = new DialogComponentButtonGroup(
+                m_settings.getConnectionTypeModel(), null, false, ConnectionType.values());
 
         final JPanel hostPanel = new JPanel(new GridBagLayout());
         hostPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), " Connection "));
@@ -105,14 +108,14 @@ public class CiracoreNodeDialog extends NodeDialogPane {
         hostPanel.add(new JLabel("Type: "), gbc);
         gbc.gridx++;
         gbc.insets = new Insets(0, 0, 0, 0);
-        // hostPanel.add(connectionType.getComponentPanel(), gbc);
+        hostPanel.add(connectionType.getComponentPanel(), gbc);
 
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 2;
-        // hostPanel.add(m_hosts.getStringValue(), gbc);
+        hostPanel.add(m_hosts, gbc);
         return hostPanel;
     }
 
@@ -143,9 +146,9 @@ public class CiracoreNodeDialog extends NodeDialogPane {
         return authPanel;
     }
 
-//    private JComponent createAdvancedPanel() {
-//        return m_options.getComponentPanel();
-//    }
+    private JComponent createAdvancedPanel() {
+        return m_options.getComponentPanel();
+    }
 
     @Override
     public void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
@@ -156,22 +159,22 @@ public class CiracoreNodeDialog extends NodeDialogPane {
             // ignore
         }
         m_auth.loadSettingsFrom(settings, specs, getCredentialsProvider());
-        // m_options.loadSettingsFrom(settings, specs);
+         m_options.loadSettingsFrom(settings, specs);
     }
 
     @Override
     public void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         // m_hosts.stopCellEditing();
         m_auth.saveSettingsTo(settings);
-//        m_options.saveSettingsTo(settings);
+        m_options.saveSettingsTo(settings);
 
         m_settings.saveSettingsTo(settings);
     }
 
     @Override
     public void onCancel() {
-//        m_hosts.cancelCellEditing();
-//        m_options.cancelCellEditing();
+        m_hosts.cancelCellEditing();
+        m_options.cancelCellEditing();
     }
     
     
