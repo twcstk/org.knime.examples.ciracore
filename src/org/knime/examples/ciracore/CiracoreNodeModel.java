@@ -14,6 +14,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.mongodb2.connection.port.MongoDBConnectionPortObjectSpec;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase; 
@@ -61,10 +62,10 @@ public class CiracoreNodeModel extends NodeModel {
         return new PortObjectSpec[]{createSpec()};
     }
 
-    private CiracorePortObjectSpec createSpec() {
+    private MongoDBConnectionPortObjectSpec createSpec() {
     	LOGGER.info("This is createSpec() method.");
     	LOGGER.info("createSpec() : m_connectionId = " + m_connectionId);
-        return new CiracorePortObjectSpec(m_connectionId);
+        return new MongoDBConnectionPortObjectSpec(m_connectionId);
     }
 
     @Override
