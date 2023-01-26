@@ -12,12 +12,12 @@ import org.knime.core.node.port.PortObjectSpec;
 
 import com.mongodb.client.MongoClient;
 
-public class CiracorePortObjectSpec extends AbstractSimplePortObjectSpec {
+public class MongoDBConnectionPortObjectSpec extends AbstractSimplePortObjectSpec {
     /**
      * Serializer class
      */
     public static final class Serializer
-        extends AbstractSimplePortObjectSpecSerializer<CiracorePortObjectSpec> {
+        extends AbstractSimplePortObjectSpecSerializer<MongoDBConnectionPortObjectSpec> {
     }
 
     private static final String CFG_CONNECTION_ID = "connectionId";
@@ -27,14 +27,14 @@ public class CiracorePortObjectSpec extends AbstractSimplePortObjectSpec {
     /**
      * Default constructor.
      */
-    public CiracorePortObjectSpec() {
+    public MongoDBConnectionPortObjectSpec() {
         this(null);
     }
 
     /**
      * @param connectionId The connection id.
      */
-    public CiracorePortObjectSpec(final String connectionId) {
+    public MongoDBConnectionPortObjectSpec(final String connectionId) {
         m_connectionId = connectionId;
     }
 

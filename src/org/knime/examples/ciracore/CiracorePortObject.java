@@ -24,7 +24,7 @@ public class CiracorePortObject extends AbstractSimplePortObject {
     public static final class Serializer extends AbstractSimplePortObjectSerializer<CiracorePortObject> {
     }
 
-    private CiracorePortObjectSpec m_spec;
+    private MongoDBConnectionPortObjectSpec m_spec;
     
     /**
      * Default constructor
@@ -37,7 +37,7 @@ public class CiracorePortObject extends AbstractSimplePortObject {
      * @param spec The {@link MongoDBConnectionPortObjectSpec} object.
      *
      */
-    public CiracorePortObject(final CiracorePortObjectSpec spec) {
+    public CiracorePortObject(final MongoDBConnectionPortObjectSpec spec) {
         m_spec = spec;
     }
 
@@ -68,8 +68,8 @@ public class CiracorePortObject extends AbstractSimplePortObject {
 	@Override
 	protected void load(ModelContentRO model, PortObjectSpec spec, ExecutionMonitor exec)
 			throws InvalidSettingsException, CanceledExecutionException {
-		if (spec instanceof CiracorePortObjectSpec) {
-            m_spec = (CiracorePortObjectSpec)spec;
+		if (spec instanceof MongoDBConnectionPortObjectSpec) {
+            m_spec = (MongoDBConnectionPortObjectSpec)spec;
         }
 
 	}

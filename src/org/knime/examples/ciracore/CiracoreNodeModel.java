@@ -50,8 +50,8 @@ public class CiracoreNodeModel extends NodeModel {
         return new PortObjectSpec[]{createSpec()};
     }
 
-    private CiracorePortObjectSpec createSpec() {
-        return new CiracorePortObjectSpec(m_connectionId);
+    private MongoDBConnectionPortObjectSpec createSpec() {
+        return new MongoDBConnectionPortObjectSpec(m_connectionId);
     }
 
     @Override
