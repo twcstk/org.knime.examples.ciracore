@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.IllegalFormatException;
 import java.util.List;
 
+import org.bson.BsonDocument;
+import org.bson.BsonInt64;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
@@ -36,9 +40,14 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.database.*;
 import org.knime.core.node.streamable.OutputPortRole;
-import org.knime.core.node.port.database.*;
-import com.mongodb.client.MongoDatabase; 
-import com.mongodb.client.*; 
+
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+
+
 
 
 /**
@@ -153,7 +162,18 @@ public class CiracoreNodeModel extends NodeModel {
 		LOGGER.info("This is execute.");
 
 		String uri = "mongodb://" + m_hostSettings.getStringValue() + ":" + m_portSettings.getIntValue();
-		m_client = MongoClients.create(uri);
+		try (MongoClient m_client = MongoClients.create(uri)) {
+            MongoDatabase database = m_client.getDatabase("admin");
+            try {
+                Bson command = new BsonDocument("ping", new BsonInt64(1));
+                Document commandResult = database.runCommand(command);
+                System.out.println("Connected successfully to server.");
+            } catch (MongoException me) {
+                System.err.println("An error occurred while attempting to run a command: " + me);
+            }
+        }
+		
+//		m_client = MongoClients.create(uri);
 	    ConnectionPortObject output = new ConnectionPortObject(m_client, DEFAULT_HOST, DEFAULT_PORT, "daviddb");
 	    return new PortObject[]{output};
 	}
@@ -170,14 +190,14 @@ public class CiracoreNodeModel extends NodeModel {
 	}
 	
 	private PortObjectSpec createSpec() {
-	        String jdbcUrl = createJdbcUrl(m_settings);
+	      // String jdbcUrl = createJdbcUrl(m_settings);
 	     // Creating a Mongo client 
-		    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
-
-
-	        DatabaseConnectionSettings s = new DatabaseConnectionSettings(m_settings);
-	        s.setJDBCUrl(jdbcUrl);
-	       PortObjectSpec spec = new DatabaseConnectionPortObjectSpec(s);
+//		    MongoClient mongo = new MongoClient( m_hostSettings.getStringValue(), m_portSettings.getIntValue() ); 
+//
+//
+//	        DatabaseConnectionSettings s = new DatabaseConnectionSettings(m_settings);
+//	        s.setJDBCUrl(jdbcUrl);
+	       PortObjectSpec spec = new MongoDBConnectionPortObjectSpec();
 	        return spec;
 	    }
 
