@@ -10,7 +10,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-
+import org.knime.mongodb2.connection.port.MongoDBConnectionPortObject;
 import com.mongodb.client.MongoClient;
 
 public class CiracorePortObject extends AbstractSimplePortObject {
@@ -26,7 +26,7 @@ public class CiracorePortObject extends AbstractSimplePortObject {
     }
 
 //    private MongoDBConnectionPortObjectSpec m_spec;
-    private  MongoDBConnectionPortObjectSpec m_spec = new MongoDBConnectionPortObjectSpec();
+    private  CiracorePortObjectSpec m_spec = new CiracorePortObjectSpec();
     
     /**
      * Default constructor
@@ -36,10 +36,10 @@ public class CiracorePortObject extends AbstractSimplePortObject {
     }
 
     /**
-     * @param spec The {@link MongoDBConnectionPortObjectSpec} object.
+     * @param spec The {@link CiracorePortObjectSpec} object.
      *
      */
-    public CiracorePortObject(final MongoDBConnectionPortObjectSpec spec) {
+    public CiracorePortObject(final CiracorePortObjectSpec spec) {
         m_spec = spec;
     }
 
@@ -70,8 +70,8 @@ public class CiracorePortObject extends AbstractSimplePortObject {
 	@Override
 	protected void load(ModelContentRO model, PortObjectSpec spec, ExecutionMonitor exec)
 			throws InvalidSettingsException, CanceledExecutionException {
-		if (spec instanceof MongoDBConnectionPortObjectSpec) {
-            m_spec = (MongoDBConnectionPortObjectSpec)spec;
+		if (spec instanceof CiracorePortObjectSpec) {
+            m_spec = (CiracorePortObjectSpec)spec;
         }
 
 	}

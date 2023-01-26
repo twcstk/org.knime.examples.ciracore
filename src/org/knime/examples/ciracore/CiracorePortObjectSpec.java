@@ -7,17 +7,14 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.ModelContentRO;
 import org.knime.core.node.ModelContentWO;
 import org.knime.core.node.port.AbstractSimplePortObjectSpec;
-import org.knime.core.node.port.PortObjectSpec;
-// import org.knime.mongodb2.connection.MongoDBConnectionRegistry;
-
 import com.mongodb.client.MongoClient;
 
-public class MongoDBConnectionPortObjectSpec extends AbstractSimplePortObjectSpec {
+public class CiracorePortObjectSpec extends AbstractSimplePortObjectSpec {
     /**
      * Serializer class
      */
     public static final class Serializer
-        extends AbstractSimplePortObjectSpecSerializer<MongoDBConnectionPortObjectSpec> {
+        extends AbstractSimplePortObjectSpecSerializer<CiracorePortObjectSpec> {
     }
 
     private static final String CFG_CONNECTION_ID = "connectionId";
@@ -27,14 +24,14 @@ public class MongoDBConnectionPortObjectSpec extends AbstractSimplePortObjectSpe
     /**
      * Default constructor.
      */
-    public MongoDBConnectionPortObjectSpec() {
+    public CiracorePortObjectSpec() {
         this(null);
     }
 
     /**
      * @param connectionId The connection id.
      */
-    public MongoDBConnectionPortObjectSpec(final String connectionId) {
+    public CiracorePortObjectSpec(final String connectionId) {
         m_connectionId = connectionId;
     }
 

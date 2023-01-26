@@ -7,6 +7,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -30,7 +31,14 @@ import com.mongodb.client.MongoDatabase;
  * @author dv
  */
 public class CiracoreNodeModel extends NodeModel {
-    
+	 /**
+	 * The logger is used to print info/warning/error messages to the KNIME console
+	 * and to the KNIME log file. Retrieve it via 'NodeLogger.getLogger' providing
+	 * the class of this node model.
+	 */
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(CiracoreNodeModel.class);
+
+
 	private final CiracoreConnectionSettings m_settings = new CiracoreConnectionSettings();
 
     private String m_connectionId;
@@ -46,17 +54,24 @@ public class CiracoreNodeModel extends NodeModel {
 
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-        m_connectionId = CiracoreConnectionRegistry.getInstance().getKey();
+    	LOGGER.info("This is configure method.");
+    	LOGGER.info("configure() : " + inSpecs);
+    	m_connectionId = CiracoreConnectionRegistry.getInstance().getKey();
+    	LOGGER.info("configure() :  m_connectionId =  " + m_connectionId);
         return new PortObjectSpec[]{createSpec()};
     }
 
-    private MongoDBConnectionPortObjectSpec createSpec() {
-        return new MongoDBConnectionPortObjectSpec(m_connectionId);
+    private CiracorePortObjectSpec createSpec() {
+    	LOGGER.info("This is createSpec() method.");
+    	LOGGER.info("createSpec() : m_connectionId = " + m_connectionId);
+        return new CiracorePortObjectSpec(m_connectionId);
     }
 
     @Override
     protected PortObject[] execute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
-        m_client = m_settings.createClient(getCredentialsProvider());
+    	LOGGER.info("This is execute method.");
+    	m_client = m_settings.createClient(getCredentialsProvider());
+    	LOGGER.info("execute() : m_client = " + m_client);
         CiracoreConnectionRegistry.getInstance().register(m_connectionId, m_client);
 
         //Make a call to validate connection and auth settings
