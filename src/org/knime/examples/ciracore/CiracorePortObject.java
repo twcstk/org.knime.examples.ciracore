@@ -24,7 +24,8 @@ public class CiracorePortObject extends AbstractSimplePortObject {
     public static final class Serializer extends AbstractSimplePortObjectSerializer<CiracorePortObject> {
     }
 
-    private MongoDBConnectionPortObjectSpec m_spec;
+//    private MongoDBConnectionPortObjectSpec m_spec;
+    private  MongoDBConnectionPortObjectSpec m_spec = new MongoDBConnectionPortObjectSpec();
     
     /**
      * Default constructor
