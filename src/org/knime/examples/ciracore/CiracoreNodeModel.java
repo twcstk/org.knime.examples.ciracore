@@ -14,6 +14,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.mongodb2.connection.port.MongoDBConnectionPortObject;
 import org.knime.mongodb2.connection.port.MongoDBConnectionPortObjectSpec;
 
 import com.mongodb.client.MongoClient;
@@ -50,7 +51,7 @@ public class CiracoreNodeModel extends NodeModel {
      * Creates new instance
      */
     protected CiracoreNodeModel() {
-        super(new PortType[]{}, new PortType[]{CiracorePortObject.TYPE});
+        super(new PortType[]{}, new PortType[]{MongoDBConnectionPortObject.TYPE});
     }
 
     @Override
@@ -78,7 +79,7 @@ public class CiracoreNodeModel extends NodeModel {
         //Make a call to validate connection and auth settings
         m_client.listDatabases().first();
 
-        return new PortObject[]{new CiracorePortObject(createSpec())};
+        return new PortObject[]{new MongoDBConnectionPortObject(createSpec())};
     }
 
 
