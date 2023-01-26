@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ciracore-Node extension for KNIME Workbench
 Bundle-SymbolicName: org.knime.examples.ciracore; singleton:=true
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.1.2.qualifier
 Bundle-ClassPath: ciracore.jar,
  lib/mongo-java-driver-3.12.11.jar
 Bundle-Activator: org.knime.examples.ciracore.CiracoreNodePlugin
