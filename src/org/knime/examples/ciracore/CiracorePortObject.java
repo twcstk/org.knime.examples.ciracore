@@ -19,12 +19,12 @@ public class CiracorePortObject extends AbstractSimplePortObject {
 
 	 /** Standard type. */
     @SuppressWarnings("hiding")
-    public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(PortObject.class);
+    public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(MongoDBConnectionPortObject.class);
 
     /**
      * Serializer class
      */
-    public static final class Serializer extends AbstractSimplePortObjectSerializer<CiracorePortObject> {
+    public static final class Serializer extends AbstractSimplePortObjectSerializer<MongoDBConnectionPortObject> {
     }
 
 //    private MongoDBConnectionPortObjectSpec m_spec;
