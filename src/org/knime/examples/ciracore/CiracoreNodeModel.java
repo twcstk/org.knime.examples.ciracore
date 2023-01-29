@@ -14,6 +14,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.mongodb2.connection.MongoDBConnectionRegistry;
 import org.knime.mongodb2.connection.port.MongoDBConnectionPortObject;
 import org.knime.mongodb2.connection.port.MongoDBConnectionPortObjectSpec;
 
@@ -51,7 +52,7 @@ public class CiracoreNodeModel extends NodeModel {
      * Creates new instance
      */
     protected CiracoreNodeModel() {
-        super(new PortType[]{}, new PortType[]{MongoDBConnectionPortObject.TYPE});
+        super(new PortType[]{} , new PortType[]{ PortObject.TYPE });
     }
 
     @Override
@@ -74,12 +75,12 @@ public class CiracoreNodeModel extends NodeModel {
     	LOGGER.info("This is execute method.");
     	m_client = m_settings.createClient(getCredentialsProvider());
     	LOGGER.info("execute() : m_client = " + m_client);
-        CiracoreConnectionRegistry.getInstance().register(m_connectionId, m_client);
+    	MongoDBConnectionRegistry.getInstance().register(m_connectionId, m_client);
 
         //Make a call to validate connection and auth settings
         m_client.listDatabases().first();
 
-        return new PortObject[]{new MongoDBConnectionPortObject(createSpec())};
+        return new PortObject[]{ new CiracorePortObject(createSpec()) };
     }
 
 
@@ -113,7 +114,7 @@ public class CiracoreNodeModel extends NodeModel {
     @Override
     protected void reset() {
         if (m_client != null) {
-            CiracoreConnectionRegistry.getInstance().deregister(m_connectionId);
+        	MongoDBConnectionRegistry.getInstance().deregister(m_connectionId);
             m_client = null;
         }
         m_connectionId = null;
